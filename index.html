@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Broadway Dental Boutique | Invisalign Consultation</title>
+  <style>
+    :root {
+      --gold: #A38B5D;
+      --black: #000000;
+      --white: #FFFFFF;
+      --light: #F5F5F5;
+      --soft-gold: rgba(163, 139, 93, 0.18);
+      --muted: rgba(255, 255, 255, 0.72);
+      --ink-muted: rgba(0, 0, 0, 0.62);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: var(--black);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      touch-action: pan-y;
+      position: fixed;
+      inset: 0;
+    }
+
+    button,
+    input,
+    a {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      position: relative;
+      overflow: hidden;
+      background: var(--black);
+    }
+
+    .progress-shell {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(3px + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .progress-bar {
+      height: 3px;
+      width: 12.5%;
+      background: linear-gradient(90deg, #7f6b43, var(--gold), #d4bd83);
+      box-shadow: 0 0 18px rgba(163, 139, 93, 0.65);
+      transform-origin: left;
+      transition: width 300ms var(--ease);
+    }
+
+    .back {
+      position: fixed;
+      z-index: 24;
+      top: calc(14px + env(safe-area-inset-top));
+      left: calc(14px + env(safe-area-inset-left));
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: currentColor;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+      transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
+    }
+
+    .back.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-8px);
+    }
+
+    .back.dark {
+      color: var(--black);
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .viewport {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .track {
+      height: 100%;
+      width: 800vw;
+      display: flex;
+      will-change: transform;
+      transition: transform 300ms var(--ease);
+    }
+
+    .card {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      flex: 0 0 100vw;
+      display: grid;
+      place-items: center;
+      padding: calc(64px + env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) calc(64px + env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card.black {
+      background:
+        radial-gradient(circle at 50% 20%, rgba(163, 139, 93, 0.18), transparent 31%),
+        linear-gradient(180deg, #111 0%, var(--black) 58%);
+      color: var(--white);
+    }
+
+    .card.light {
+      background:
+        radial-gradient(circle at 80% 12%, rgba(163, 139, 93, 0.14), transparent 32%),
+        var(--light);
+      color: var(--black);
+    }
+
+    .card.gold {
+      background:
+        radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.35), transparent 30%),
+        linear-gradient(160deg, #c7b27a, var(--gold) 54%, #806b43);
+      color: var(--black);
+    }
+
+    .content {
+      width: min(100%, 520px);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .brand-icon {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 4px;
+      color: var(--gold);
+      filter: drop-shadow(0 0 16px rgba(163, 139, 93, 0.38));
+      animation: glow 2.8s ease-in-out infinite;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.04;
+    }
+
+    h1 {
+      color: var(--gold);
+      font-size: clamp(30px, 9vw, 42px);
+    }
+
+    h2 {
+      font-size: clamp(28px, 8vw, 38px);
+    }
+
+    .gold-title {
+      color: var(--gold);
+    }
+
+    p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .ink-muted {
+      color: var(--ink-muted);
+    }
+
+    .button,
+    .option,
+    .link-button {
+      width: 100%;
+      min-height: 56px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 170ms ease, box-shadow 170ms ease, background 170ms ease;
+      touch-action: manipulation;
+    }
+
+    .button:hover,
+    .option:hover,
+    .link-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+    }
+
+    .button:active,
+    .option:active,
+    .link-button:active {
+      transform: scale(0.985);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #c7b27a, var(--gold));
+      color: var(--black);
+      box-shadow: 0 14px 34px rgba(163, 139, 93, 0.32);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary::after {
+      content: "";
+      position: absolute;
+      top: -40%;
+      left: -80%;
+      width: 55%;
+      height: 180%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      animation: shimmer 3.4s ease-in-out infinite;
+    }
+
+    .option {
+      justify-content: flex-start;
+      text-align: left;
+      color: inherit;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+    }
+
+    .black .option {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 0 0 1px rgba(163, 139, 93, 0.12);
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .option-icon {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(163, 139, 93, 0.14);
+    }
+
+    .testimonial-wrap {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .testimonial-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .testimonial-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .testimonial {
+      min-width: 86%;
+      scroll-snap-align: center;
+      text-align: left;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.09);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .quote {
+      font-size: 15px;
+      line-height: 1.45;
+      color: rgba(0, 0, 0, 0.78);
+    }
+
+    .author {
+      margin-top: 12px;
+      color: var(--black);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .badge {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(163, 139, 93, 0.12);
+      color: var(--black);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    input {
+      width: 100%;
+      height: 54px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      outline: 0;
+      padding: 0 15px;
+      font-size: 16px;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.54);
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      background: rgba(255, 255, 255, 0.13);
+      box-shadow: 0 0 0 4px rgba(163, 139, 93, 0.16);
+    }
+
+    .privacy {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.58);
+      line-height: 1.45;
+    }
+
+    .check {
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 2px;
+    }
+
+    .check circle {
+      fill: rgba(255, 255, 255, 0.24);
+      stroke: rgba(0, 0, 0, 0.2);
+    }
+
+    .check path {
+      fill: none;
+      stroke: var(--black);
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+    }
+
+    .card.active .check path {
+      animation: draw 680ms 160ms var(--ease) forwards;
+    }
+
+    .call,
+    .website {
+      color: var(--black);
+    }
+
+    .call {
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14);
+    }
+
+    .website {
+      min-height: 48px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .dots {
+      position: fixed;
+      z-index: 21;
+      left: 50%;
+      bottom: calc(17px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(14px);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.45);
+      transition: width 220ms ease, background 220ms ease;
+    }
+
+    .dot.active {
+      width: 18px;
+      background: var(--gold);
+    }
+
+    .arrows {
+      display: none;
+      position: fixed;
+      z-index: 22;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .arrow {
+      pointer-events: auto;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(14px);
+      transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
+    }
+
+    .arrow:hover {
+      transform: translateY(-50%) scale(1.04);
+      background: rgba(0, 0, 0, 0.42);
+    }
+
+    .arrow:disabled {
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .arrow.prev {
+      left: 20px;
+    }
+
+    .arrow.next {
+      right: 20px;
+    }
+
+    svg {
+      display: block;
+    }
+
+    @media (min-width: 760px) {
+      .arrows {
+        display: block;
+      }
+
+      .content {
+        gap: 20px;
+      }
+
+      .card {
+        padding-left: 88px;
+        padding-right: 88px;
+      }
+
+      .testimonial {
+        min-width: calc((100% - 24px) / 3);
+      }
+    }
+
+    @media (max-height: 710px) {
+      .content {
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: clamp(28px, 8vw, 36px);
+      }
+
+      h2 {
+        font-size: clamp(26px, 7vw, 34px);
+      }
+
+      p {
+        font-size: 15px;
+      }
+
+      .button,
+      .option,
+      .link-button {
+        min-height: 52px;
+        padding-block: 12px;
+      }
+
+      .brand-icon {
+        width: 58px;
+        height: 58px;
+      }
+    }
+
+    @media (max-height: 620px) {
+      .card {
+        padding-top: calc(46px + env(safe-area-inset-top));
+        padding-bottom: calc(46px + env(safe-area-inset-bottom));
+      }
+
+      .content {
+        gap: 9px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      p,
+      .button,
+      .option,
+      .link-button {
+        font-size: 14px;
+      }
+
+      .button,
+      .option,
+      .link-button,
+      input {
+        min-height: 48px;
+        height: 48px;
+      }
+
+      form {
+        gap: 8px;
+      }
+
+      .privacy {
+        font-size: 11px;
+      }
+
+      .testimonial {
+        padding: 14px;
+      }
+
+      .quote {
+        font-size: 13px;
+      }
+    }
+
+    @keyframes shimmer {
+      0%, 45% { transform: translateX(0) rotate(18deg); }
+      70%, 100% { transform: translateX(390%) rotate(18deg); }
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 12px rgba(163, 139, 93, 0.22)); }
+      50% { filter: drop-shadow(0 0 22px rgba(163, 139, 93, 0.5)); }
+    }
+
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" aria-label="Broadway Dental Boutique Invisalign quiz">
+    <div class="progress-shell" aria-hidden="true">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <button class="back hidden" id="backButton" type="button" aria-label="Go back">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="viewport" id="viewport">
+      <div class="track" id="track">
+        <section class="card black active" aria-label="Start">
+          <div class="content">
+            <svg class="brand-icon" viewBox="0 0 80 80" aria-hidden="true">
+              <path d="M23 17c6-5 12-2 17 1 5-3 11-6 17-1 8 7 4 22 1 31-4 12-8 19-14 18-4-1-3-13-4-13s0 12-4 13c-6 1-10-6-14-18-3-9-7-24 1-31z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M27 28c4 3 9 4 13 4s9-1 13-4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <div class="eyebrow">BROADWAY DENTAL BOUTIQUE · CRAWLEY</div>
+            <h1>Want straighter teeth without metal braces?</h1>
+            <p class="muted">Take this 60-second quiz to see if Invisalign is right for you.</p>
+            <button class="button primary js-next" type="button">Start Quiz <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <section class="card light" aria-label="Question 1">
+          <div class="content">
+            <h2>How would you describe your teeth right now?</h2>
+            <div class="options" role="group" aria-label="Teeth description">
+              <button class="option js-next" type="button">Mildly crooked</button>
+              <button class="option js-next" type="button">Quite crooked or gapped</button>
+              <button class="option js-next" type="button">Very crooked, I hide my smile</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card black" aria-label="Question 2">
+          <div class="content">
+            <h2>Have you considered straightening your teeth before?</h2>
+            <div class="options" role="group" aria-label="Previous consideration">
+              <button class="option js-next" type="button">Yes, I've thought about it</button>
+              <button class="option js-next" type="button">No, this is my first time</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card light" aria-label="Question 3">
+          <div class="content">
+            <h2>What matters most to you?</h2>
+            <div class="options" role="group" aria-label="Treatment priority">
+              <button class="option js-next" type="button">
+                <span class="option-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M6 13c1.5 2.2 3.5 3.3 6 3.3s4.5-1.1 6-3.3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M8 9h.01M16 9h.01" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </span>
+                Straight teeth
+              </button>
+              <button class="option js-next" type="button">
+                <span class="option-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 3l2.7 5.7 6.3.8-4.6 4.4 1.2 6.1-5.6-3.1L6.4 20l1.2-6.1L3 9.5l6.3-.8L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                More confidence
+              </button>
+              <button class="option js-next" type="button">
+                <span class="option-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M20.5 7.7c0 5.6-8.5 11.1-8.5 11.1S3.5 13.3 3.5 7.7A4.4 4.4 0 0 1 12 6a4.4 4.4 0 0 1 8.5 1.7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                Better oral health
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card black" aria-label="Results">
+          <div class="content">
+            <div class="eyebrow">YOUR INVISALIGN RESULT</div>
+            <h2 class="gold-title">Great news! ✨</h2>
+            <p>Based on your answers, you could be a perfect candidate for Invisalign at Broadway Dental Boutique.</p>
+            <p class="muted">Dr. Amo, our Invisalign specialist, has helped hundreds of patients in Crawley achieve their dream smile.</p>
+            <button class="button primary js-next" type="button">See Your Options <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <section class="card light" aria-label="Social proof">
+          <div class="content">
+            <h2>Real patients. Real results.</h2>
+            <div class="testimonial-wrap" aria-label="Patient testimonials">
+              <div class="testimonial-track">
+                <article class="testimonial">
+                  <p class="quote">“I'm so happy with my Invisalign and whitening treatment and so glad I chose Broadway Dental”</p>
+                  <div class="author">Francesca D.</div>
+                </article>
+                <article class="testimonial">
+                  <p class="quote">“I'm nearing the end of my treatment and my teeth look amazing and straight.”</p>
+                  <div class="author">Sarah A.</div>
+                </article>
+                <article class="testimonial">
+                  <p class="quote">“I had Invisalign, new crowns and composite bonding. From start to finish, I felt looked after.”</p>
+                  <div class="author">Laura H.</div>
+                </article>
+              </div>
+            </div>
+            <div class="badge" aria-label="Five star multi award-winning practice">⭐⭐⭐⭐⭐ Multi award-winning practice</div>
+            <button class="button primary js-next" type="button">Book Your Free Consultation <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <section class="card black" aria-label="Lead capture">
+          <div class="content">
+            <h2 class="gold-title">Claim your free Invisalign consultation</h2>
+            <p class="muted">Worth £150. Limited availability this month.</p>
+            <form id="leadForm">
+              <input type="text" name="first_name" autocomplete="given-name" placeholder="First name" required>
+              <input type="text" name="last_name" autocomplete="family-name" placeholder="Last name" required>
+              <input type="email" name="email" autocomplete="email" placeholder="Email address" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$">
+              <input type="tel" name="phone" autocomplete="tel" placeholder="Phone number" required>
+              <input type="hidden" name="source" value="invisalign-funnel">
+              <button class="button primary" type="submit">Book My Free Consultation <span aria-hidden="true">→</span></button>
+            </form>
+            <p class="privacy">We'll contact you within 24 hours to arrange your consultation. Your data is safe with us.</p>
+          </div>
+        </section>
+
+        <section class="card gold" aria-label="Thank you">
+          <div class="content">
+            <svg class="check" viewBox="0 0 96 96" aria-hidden="true">
+              <circle cx="48" cy="48" r="43" stroke-width="2"/>
+              <path d="M29 49l13 13 27-31"/>
+            </svg>
+            <h2>You're all set! 🎉</h2>
+            <p>We'll be in touch within 24 hours to book your free Invisalign consultation.</p>
+            <a class="link-button call" href="tel:01293428342">Call us now: 01293 428342</a>
+            <a class="website" href="https://broadwaydentalb.co.uk" target="_blank" rel="noopener">Visit our website <span aria-hidden="true">→</span></a>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="dots" id="dots" aria-hidden="true"></div>
+
+    <div class="arrows" aria-hidden="true">
+      <button class="arrow prev" id="prevArrow" type="button" aria-label="Previous card">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="arrow next" id="nextArrow" type="button" aria-label="Next card">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const track = document.getElementById('track');
+      const viewport = document.getElementById('viewport');
+      const cards = Array.from(document.querySelectorAll('.card'));
+      const progressBar = document.getElementById('progressBar');
+      const backButton = document.getElementById('backButton');
+      const prevArrow = document.getElementById('prevArrow');
+      const nextArrow = document.getElementById('nextArrow');
+      const dotsWrap = document.getElementById('dots');
+      const form = document.getElementById('leadForm');
+      const total = cards.length;
+      let current = 0;
+      let startX = 0;
+      let startY = 0;
+      let deltaX = 0;
+      let deltaY = 0;
+      let touching = false;
+      let leadSubmitted = false;
+
+      cards.forEach((_, index) => {
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        dot.addEventListener('click', () => goTo(index));
+        dotsWrap.appendChild(dot);
+      });
+
+      const dots = Array.from(dotsWrap.children);
+
+      function goTo(index) {
+        if (index >= total - 1 && !leadSubmitted) {
+          return;
+        }
+
+        current = Math.max(0, Math.min(index, total - 1));
+        track.style.transform = `translate3d(${-current * 100}vw, 0, 0)`;
+        progressBar.style.width = `${((current + 1) / total) * 100}%`;
+
+        cards.forEach((card, cardIndex) => {
+          card.classList.toggle('active', cardIndex === current);
+        });
+
+        dots.forEach((dot, dotIndex) => {
+          dot.classList.toggle('active', dotIndex === current);
+        });
+
+        backButton.classList.toggle('hidden', current === 0);
+        backButton.classList.toggle('dark', cards[current].classList.contains('light') || cards[current].classList.contains('gold'));
+        prevArrow.disabled = current === 0;
+        nextArrow.disabled = current === total - 1 || (current === total - 2 && !leadSubmitted);
+      }
+
+      function next() {
+        goTo(current + 1);
+      }
+
+      function prev() {
+        goTo(current - 1);
+      }
+
+      document.querySelectorAll('.js-next').forEach((button) => {
+        button.addEventListener('click', next);
+      });
+
+      backButton.addEventListener('click', prev);
+      prevArrow.addEventListener('click', prev);
+      nextArrow.addEventListener('click', next);
+
+      viewport.addEventListener('touchstart', (event) => {
+        const touch = event.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        deltaX = 0;
+        deltaY = 0;
+        touching = true;
+      }, { passive: true });
+
+      viewport.addEventListener('touchmove', (event) => {
+        if (!touching) return;
+        const touch = event.touches[0];
+        deltaX = touch.clientX - startX;
+        deltaY = touch.clientY - startY;
+
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      viewport.addEventListener('touchend', () => {
+        if (!touching) return;
+        touching = false;
+
+        if (Math.abs(deltaX) > 54 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+          if (deltaX < 0) next();
+          if (deltaX > 0) prev();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight') next();
+        if (event.key === 'ArrowLeft') prev();
+      });
+
+      document.addEventListener('touchmove', (event) => {
+        if (event.target.closest('.testimonial-track')) return;
+        event.preventDefault();
+      }, { passive: false });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        if (!form.reportValidity()) return;
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        console.log('Invisalign funnel lead:', data);
+        leadSubmitted = true;
+        goTo(7);
+      });
+
+      goTo(0);
+    })();
+  </script>
+</body>
+</html>
